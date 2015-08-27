@@ -48,10 +48,10 @@ public class BenchmarkTest {
         double gflops = 2e-6 * Math.pow(SIZE, 3) / (t1 - t0);
         System.out.println("gflops/s: " + gflops);
 
-//        System.out.println("test 2 - java single core");
-//        t0 = System.currentTimeMillis();
-//        javaTest0();
-//        t1 = System.currentTimeMillis();
-//        System.out.println("time in ms: " + (t1 - t0));
+        System.out.println("test 2 - java single core");
+        t0 = System.currentTimeMillis();
+        javaTest0();
+        t1 = System.currentTimeMillis();
+        System.out.println("time in ms: " + (t1 - t0));
     }
 }

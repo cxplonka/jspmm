@@ -7,6 +7,7 @@ nbdist/
 .gradle/
 nbactions.xml
 nb-configuration.xml
+/.nb-gradle/
 
 # Class Files #
 *.class
@@ -59,4 +60,3 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-/.nb-gradle/
