@@ -1,0 +1,4 @@
+include 'jspmm'
+include 'jspmm-annotation'
+include 'jspmm-gridgain'
+include 'jspmm-opencl'

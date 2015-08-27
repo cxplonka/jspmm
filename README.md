@@ -19,9 +19,7 @@ Supported multiplication between the different matrix types are:
 * (CRS matrix) x (CCS matrix) also COO result matrix
 * more coming...
 
-The (CRS matrix) x (CCS matrix) multiplication is based on the paper from [Sean Rose, GPU Sparse Matrix Multiplication with CUDA, 2013](https://www.cs.fsu.edu/research/projects/rose_report.pdf)
-
-## OpenCL implementation
+The (CRS matrix) x (CCS matrix) multiplication take ideas from the paper of [Sean Rose, GPU Sparse Matrix Multiplication with CUDA, 2013](https://www.cs.fsu.edu/research/projects/rose_report.pdf)
 
 ## Examples
 
@@ -125,4 +123,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-```
