@@ -21,24 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jspmm.matrix;
+package com.annotation.trigram;
+
+import com.jspmm.matrix.CCSMatrix;
+import com.jspmm.matrix.CRSMatrix;
+import com.jspmm.matrix.DenseFloatMatrix;
+import com.jspmm.util.CCSStreamMatrix;
+import com.jspmm.util.CRSStreamMatrix;
+import com.jspmm.util.Util;
+import java.io.IOException;
 
 /**
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public abstract class AbstractMatrix {
+public class TermMatrixTest {
 
-    public final int nrow;
-    public final int ncol;
-
-    public AbstractMatrix(int nrow, int ncol) {
-        this.nrow = nrow;
-        this.ncol = ncol;
+    public static void main(String[] arg) throws IOException {
+        TermMatrix mesh = new TermMatrix();
+        mesh.generate("d:/terms.txt", "d:/terms_ccs.mat");
+                
+        SentenceMatrix data = new SentenceMatrix(mesh.getGramIdx());
+        data.generate("d:/sentences.txt", "d:/sentense_crs.mat");        
+        
+        CRSMatrix crs = CRSStreamMatrix.readCRSMatrix("d:/sentense_crs.mat");
+        System.out.println(crs.nrow + " " + crs.ncol);
+        
+        CCSMatrix ccs = CCSStreamMatrix.readCCSMatrix("d:/terms_ccs.mat");
+        System.out.println(ccs.nrow + " " + ccs.ncol);
+        
+        DenseFloatMatrix m = crs.multiply(ccs);
+        Util.print(m);
     }
-
-    public abstract float get(int i, int j);
-
-    public abstract void set(int i, int j, float value);
-
 }

@@ -1,14 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * The MIT License
+ *
+ * Copyright 2015 Christian Plonka.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package com.jspmm.matrix;
 
 /**
  * CRS (Compressed Row Storage) Matrix
  *
- * @author cplonka
+ * @author Christian Plonka (cplonka81@gmail.com)
  */
 public class CRSMatrix extends AbstractMatrix {
 
@@ -24,7 +42,7 @@ public class CRSMatrix extends AbstractMatrix {
     }
 
     /**
-     * create an CRS from an dense matrix
+     * Create an CRS from an dense matrix
      *
      * @param values
      * @param ncol
@@ -33,7 +51,7 @@ public class CRSMatrix extends AbstractMatrix {
     public static CRSMatrix create(float[] values, int ncol) {
         int nz = 0;
         int nrow = values.length / ncol;
-        //count nonzero elements
+        // count nonzero elements
         for (float value : values) {
             if (value != 0) {
                 nz++;
@@ -43,13 +61,13 @@ public class CRSMatrix extends AbstractMatrix {
         float[] val = new float[nz];
         int[] colIdx = new int[nz];
         int[] rowPtr = new int[nrow + 1];
-        //scan row major
+        // scan row major
         for (int i = 0, nnz = 0; i < nrow; i++) {
             for (int j = 0; j < ncol; j++) {
                 float value = values[i * ncol + j];
                 if (value != 0) {
                     val[nnz] = value;
-                    //col idx for this values
+                    // col idx for this values
                     colIdx[nnz++] = j;
                 }
             }
@@ -86,12 +104,12 @@ public class CRSMatrix extends AbstractMatrix {
             throw new UnsupportedOperationException("Matrix type dont supported.");
         }
 
-        for (int rowA = 0; rowA < nrow; rowA++) { //each row in A
-            for (int colB = 0; colB < m.ncol; colB++) { //each column in B
+        for (int rowA = 0; rowA < nrow; rowA++) { // each row in A
+            for (int colB = 0; colB < m.ncol; colB++) { // each column in B
                 float value = 0;
-                //each nonzero in A row
+                // each nonzero in A row
                 for (int i = rowPtr[rowA]; i < rowPtr[rowA + 1]; i++) {
-                    //each nonzero in B column
+                    // each nonzero in B column
                     for (int j = m.colPtr[colB]; j < m.colPtr[colB + 1]; j++) {
                         if (colIdx[i] == m.rowIdx[j]) {
                             value += values[i] * m.values[j];
@@ -99,7 +117,7 @@ public class CRSMatrix extends AbstractMatrix {
                         }
                     }
                 }
-                //add nonzero calculated values
+                // add nonzero calculated values
                 if (value != 0) {
                     ret.set(rowA, colB, value);
                 }

@@ -8,7 +8,7 @@ __kernel void dense_spmm_mult(__global float* c,
     int i = get_global_id(0);
     int j = get_global_id(1);
     
-    //pad matrix elements by zero or check
+    // pad matrix elements by zero or check
     if(i >= p || j >= r) {
         return;
     }

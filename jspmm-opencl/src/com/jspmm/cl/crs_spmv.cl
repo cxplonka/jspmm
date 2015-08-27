@@ -16,6 +16,6 @@ __kernel void crs_spmv_mult(__global float* y,
         value += a[i] * x[colIdx[i]];
     }
 
-    //back to global memory
+    // back to global memory
     y[idx] = value;
 }

@@ -13,7 +13,7 @@ __kernel void crs_ccs_spmm_nnz(__global float* a,
     int rowA = get_global_id(0);
     int colB = get_global_id(1);
     
-    //pad matrix elements by zero or check
+    // pad matrix elements by zero or check
     if(rowA >= p || colB >= r) {
         return;
     }
@@ -21,10 +21,10 @@ __kernel void crs_ccs_spmm_nnz(__global float* a,
     float value = 0;
     int cidx;
     
-    //each nonzero in A row
+    // each nonzero in A row
     for (int i = aRowPtr[rowA]; i < aRowPtr[rowA + 1]; i++) {        
         cidx = aColIdx[i]; //memory access pattern not gpu friendly
-        //each nonzero in B column
+        // each nonzero in B column
         for (int j = bColPtr[colB]; j < bColPtr[colB + 1]; j++) {
             if(cidx == bRowIdx[j]) {
                 value += a[i] * b[j];
@@ -33,7 +33,7 @@ __kernel void crs_ccs_spmm_nnz(__global float* a,
         }
     }
 
-    //increment atomic, maybe local reduction better
+    // increment atomic, maybe local reduction better
     if(value != 0) {
         atom_inc(&nnz[0]);
     }

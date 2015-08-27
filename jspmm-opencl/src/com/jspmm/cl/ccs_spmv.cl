@@ -1,6 +1,6 @@
 #pragma OPENCL EXTENSION cl_khr_global_int32_base_atomics : enable
 
-//source http://suhorukov.blogspot.de/2011/12/opencl-11-atomic-operations-on-floating.html
+// source http://suhorukov.blogspot.de/2011/12/opencl-11-atomic-operations-on-floating.html
 void atomic_add_local(volatile __global float *source, const float operand) {
     union {
         unsigned int intVal;
@@ -32,7 +32,7 @@ __kernel void ccs_spmv_mult(__global float* y,
     }
     
     for(int i = colPtr[idx]; i < colPtr[idx + 1]; i++) {
-        //slow atomic add operation to global memory
+        // slow atomic add operation to global memory
         atomic_add_local(&y[rowIdx[i]], a[i] * x[idx]);
     }
 }
