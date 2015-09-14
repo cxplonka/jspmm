@@ -59,6 +59,8 @@ public class MutableCOOMatrix extends AbstractMatrix {
 
     @Override
     public void set(int i, int j, float value) {
+        // nrow = Math.max(i, nrow);
+        // ncol = Math.max(j, ncol);
         _backBuffer.put(pack(i, j), value);
     }
 

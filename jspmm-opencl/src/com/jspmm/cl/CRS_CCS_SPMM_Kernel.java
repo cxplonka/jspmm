@@ -24,7 +24,7 @@
 package com.jspmm.cl;
 
 import com.jspmm.matrix.CCSMatrix;
-import com.jspmm.matrix.COOMatrix;
+import com.jspmm.matrix.StaticCOOMatrix;
 import com.jspmm.matrix.CRSMatrix;
 import com.jspmm.util.Util;
 import com.nativelibs4java.opencl.CLBuffer;
@@ -50,7 +50,7 @@ final class CRS_CCS_SPMM_Kernel {
         InputStream stream = null;
         try {
             //read kernel source
-            source = Util.readContent(stream = CL.class.getResourceAsStream(
+            source = Util.readContent(stream = CLSpMM.class.getResourceAsStream(
                     "/com/jspmm//cl/crs_ccs_spmm.cl"));
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -67,7 +67,7 @@ final class CRS_CCS_SPMM_Kernel {
         this.context = context;
     }
 
-    public COOMatrix multiply(CRSMatrix m0, CCSMatrix m1) {
+    public StaticCOOMatrix multiply(CRSMatrix m0, CCSMatrix m1) {
         //A
         Pointer<Float> ptr_m0 = Pointer.allocateFloats(m0.values.length).order(context.getByteOrder());
         ptr_m0.setFloats(m0.values);
@@ -122,7 +122,7 @@ final class CRS_CCS_SPMM_Kernel {
                 cl_cRowIdx.read(queue, ptr_cRowIdx, true);
                 cl_cValues.read(queue, ptr_cValues, true);
                 
-                return new COOMatrix(m0.nrow, m1.ncol,
+                return new StaticCOOMatrix(m0.nrow, m1.ncol,
                         ptr_cValues.getFloats(),
                         ptr_cRowIdx.getInts(),
                         ptr_cColIdx.getInts());

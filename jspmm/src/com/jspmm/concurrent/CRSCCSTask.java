@@ -49,19 +49,19 @@ class CRSCCSTask implements Callable<MutableCOOMatrix> {
     }
 
     @Override
-    public MutableCOOMatrix call() throws Exception {        
+    public MutableCOOMatrix call() throws Exception {
         MutableCOOMatrix ret = new MutableCOOMatrix(a.nrow, b.ncol);
         int rows = (int) rowRange.getLowerBound();
         int rowe = (int) rowRange.getUpperBound();
         int cols = (int) colRange.getLowerBound();
         int cole = (int) colRange.getUpperBound();
         //
-        for (int rowA = rows; rowA < rowe; rowA++) { //each row in A
-            for (int colB = cols; colB < cole; colB++) { //each column in B
+        for (int rowA = rows; rowA < rowe; rowA++) { // each row in A
+            for (int colB = cols; colB < cole; colB++) { // each column in B
                 float value = 0;
-                //each nonzero in A row
+                // each nonzero in A row
                 for (int i = a.rowPtr[rowA]; i < a.rowPtr[rowA + 1]; i++) {
-                    //each nonzero in B column
+                    // each nonzero in B column
                     for (int j = b.colPtr[colB]; j < b.colPtr[colB + 1]; j++) {
                         if (a.colIdx[i] == b.rowIdx[j]) {
                             value += a.values[i] * b.values[j];
@@ -69,7 +69,7 @@ class CRSCCSTask implements Callable<MutableCOOMatrix> {
                         }
                     }
                 }
-                //add nonzero calculated values
+                // add nonzero calculated values
                 if (value != 0) {
                     ret.set(rowA, colB, value);
                 }

@@ -31,7 +31,7 @@ import com.nativelibs4java.opencl.CLProgram;
 import com.nativelibs4java.opencl.CLQueue;
 import java.io.IOException;
 import java.io.InputStream;
-import com.jspmm.matrix.COOMatrix;
+import com.jspmm.matrix.StaticCOOMatrix;
 import com.jspmm.util.Util;
 import org.bridj.Pointer;
 
@@ -48,7 +48,7 @@ final class COO_SPMV_Kernel {
         InputStream stream = null;
         try {
             //read kernel source
-            source = Util.readContent(stream = CL.class.getResourceAsStream(
+            source = Util.readContent(stream = CLSpMM.class.getResourceAsStream(
                     "/com/jspmm/cl/coo_spmv.cl"));
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -64,7 +64,7 @@ final class COO_SPMV_Kernel {
         this.context = context;
     }
 
-    public float[] multiply(COOMatrix m0, float[] v) {
+    public float[] multiply(StaticCOOMatrix m0, float[] v) {
         //crs matrix A
         Pointer<Float> ptr_m0 = Pointer.allocateFloats(m0.values.length).order(context.getByteOrder());
         ptr_m0.setFloats(m0.values);

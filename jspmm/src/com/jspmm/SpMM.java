@@ -21,39 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.annotation.trigram;
+package com.jspmm;
 
-import com.jspmm.SpMM;
-import com.jspmm.StreamSpMM;
+import com.jspmm.matrix.AbstractMatrix;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
-import com.jspmm.matrix.DenseFloatMatrix;
-import com.jspmm.util.CCSStreamMatrix;
-import com.jspmm.util.CRSStreamMatrix;
-import com.jspmm.util.Util;
-import java.io.IOException;
 
 /**
  *
+ * Matrix definition (SPMM):
+ * 
+ *        C     =     A     x     B
+ *      -----       -----       -----
+ *        r           q           r
+ *      *****       *****       *****
+ *    p *****     p *****     q *****
+ *      *****       *****       ***** 
+ * 
+ * Matrix definition (SPMV):
+ * 
+ *        y     =     A     x     x
+ *      -----       -----       -----
+ *       r(1)         q          r(1)
+ *        *         *****         *
+ *      p *       p *****       q *
+ *        *         *****         *
+ * 
+ * Matrix is saved in Row-Major.
+ *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class TermMatrixTest {
+public interface SpMM {
 
-    public static void main(String[] arg) throws IOException {
-        TermMatrix mesh = new TermMatrix();
-        mesh.generate("d:/terms.txt", "d:/terms_ccs.mat");
-                
-        SentenceMatrix data = new SentenceMatrix(mesh.getGramIdx());
-        data.generate("d:/sentences.txt", "d:/sentense_crs.mat");        
-        
-        CRSMatrix crs = CRSStreamMatrix.readCRSMatrix("d:/sentense_crs.mat");
-        System.out.println(crs.nrow + " " + crs.ncol);
-        
-        CCSMatrix ccs = CCSStreamMatrix.readCCSMatrix("d:/terms_ccs.mat");
-        System.out.println(ccs.nrow + " " + ccs.ncol);
-        
-        SpMM spmm = new StreamSpMM();
-        DenseFloatMatrix m = spmm.multiply(crs, ccs, DenseFloatMatrix.class);
-        Util.print(m);
-    }
+    public <T extends AbstractMatrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result);
+
+    public <T extends AbstractMatrix> T multiply(AbstractMatrix m0, AbstractMatrix m1, Class<T> result);
 }

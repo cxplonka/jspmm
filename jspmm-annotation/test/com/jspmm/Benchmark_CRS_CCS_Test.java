@@ -21,39 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.annotation.trigram;
+package com.jspmm;
 
-import com.jspmm.SpMM;
-import com.jspmm.StreamSpMM;
+import com.jspmm.matrix.AbstractMatrix;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
-import com.jspmm.matrix.DenseFloatMatrix;
+import com.jspmm.matrix.MutableCOOMatrix;
 import com.jspmm.util.CCSStreamMatrix;
 import com.jspmm.util.CRSStreamMatrix;
-import com.jspmm.util.Util;
-import java.io.IOException;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class TermMatrixTest {
+public class Benchmark_CRS_CCS_Test {
 
-    public static void main(String[] arg) throws IOException {
-        TermMatrix mesh = new TermMatrix();
-        mesh.generate("d:/terms.txt", "d:/terms_ccs.mat");
-                
-        SentenceMatrix data = new SentenceMatrix(mesh.getGramIdx());
-        data.generate("d:/sentences.txt", "d:/sentense_crs.mat");        
-        
-        CRSMatrix crs = CRSStreamMatrix.readCRSMatrix("d:/sentense_crs.mat");
-        System.out.println(crs.nrow + " " + crs.ncol);
-        
-        CCSMatrix ccs = CCSStreamMatrix.readCCSMatrix("d:/terms_ccs.mat");
-        System.out.println(ccs.nrow + " " + ccs.ncol);
-        
-        SpMM spmm = new StreamSpMM();
-        DenseFloatMatrix m = spmm.multiply(crs, ccs, DenseFloatMatrix.class);
-        Util.print(m);
+    static CRSMatrix m0;
+    static CCSMatrix m1;
+
+    static SpMM service;
+
+    @BeforeClass
+    public static void setUpClass() {
+        service = new StreamSpMM();
+
+        m0 = CRSStreamMatrix.readCRSMatrix("d:/crs_sentences.mat");
+        m1 = CCSStreamMatrix.readCCSMatrix("d:/ccs_term.mat");
+    }
+
+    @Test
+    public void testSpMM_m1() {
+        long t0 = System.currentTimeMillis();
+        AbstractMatrix m = service.multiply(m0, m1, MutableCOOMatrix.class);
+        long t1 = System.currentTimeMillis();
+        System.out.println((t1 - t0) + "ms");
+    }
+
+    public static void main(String[] arg) {
+//        Util.createCRSMatrix("d:/crs_sentences.mat", 100, 19000, 0.03);
+//        Util.createCCSMatrix("d:/ccs_term.mat", 19000, 218754, 0.00125);
     }
 }

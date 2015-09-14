@@ -46,7 +46,7 @@ class CRSCCSMapper implements MapReduce<CRSMatrix, CCSMatrix, MutableCOOMatrix> 
         List<Callable<MutableCOOMatrix>> tasks = new ArrayList<>();
         this.nrow = a.nrow;
         this.ncol = b.ncol;
-        //create tasks
+        // create tasks
         if (nodes > 0) {
             for (Range ir : Range.subRange(a.nrow, nodes)) {
                 for (Range jr : Range.subRange(b.ncol, nodes)) {

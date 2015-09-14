@@ -28,13 +28,13 @@ package com.jspmm.matrix;
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class COOMatrix extends AbstractMatrix {
+public class StaticCOOMatrix extends AbstractMatrix {
 
     public final float[] values;
     public final int[] rowIdx;
     public final int[] colIdx;
 
-    public COOMatrix(int nrow, int ncol, float[] values, int[] rowIdx, int[] colIdx) {
+    public StaticCOOMatrix(int nrow, int ncol, float[] values, int[] rowIdx, int[] colIdx) {
         super(nrow, ncol);
         this.values = values;
         this.rowIdx = rowIdx;
@@ -48,7 +48,7 @@ public class COOMatrix extends AbstractMatrix {
      * @param ncol
      * @return
      */
-    public static COOMatrix create(float[] values, int ncol) {
+    public static StaticCOOMatrix create(float[] values, int ncol) {
         int nz = 0;
         int row = values.length / ncol;
         // count nonzero elements
@@ -73,7 +73,7 @@ public class COOMatrix extends AbstractMatrix {
             }
         }
 
-        return new COOMatrix(row, ncol, val, rowIdx, colIdx);
+        return new StaticCOOMatrix(row, ncol, val, rowIdx, colIdx);
     }
 
     public float[] multiply(float[] vector) {
@@ -90,6 +90,7 @@ public class COOMatrix extends AbstractMatrix {
 
     @Override
     public float get(int i, int j) {
+        // find row and col
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

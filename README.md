@@ -1,7 +1,7 @@
 # jspmm
 
 JSpMM provides matrix-matrix and matrix-vector multiplication for different matrix types and different backends 
-like Multicore CPU, OpenCL and GridComputing based on GridGain in single precision floating point arithmetic.
+for Java8 Streams, Multicore CPU, OpenCL and GridComputing based on GridGain in single precision floating point arithmetic.
 
 The package support current matrix types:
 
@@ -15,8 +15,8 @@ The package support current matrix types:
 Supported multiplication between the different matrix types are:
 
 * (Dense, CCS, CRS, COO matrix) x (dense vector)
-* (Dense matrix) x (CCS Matrix)
-* (CRS matrix) x (CCS matrix) also COO result matrix
+* (Dense matrix) x (Dense Matrix)
+* (CRS matrix) x (CCS matrix) as COO result matrix
 * more coming...
 
 The (CRS matrix) x (CCS matrix) multiplication take ideas from the paper of [Sean Rose, GPU Sparse Matrix Multiplication with CUDA, 2013](https://www.cs.fsu.edu/research/projects/rose_report.pdf)
@@ -48,51 +48,51 @@ CCSMatrix ccs = CCSMatrix.create(m0, 5);
 
 ```
 
-Multiply matrices (CPU):
+#### Multiply matrices (CPU):
 
 ```java
+// create context
+SpMM spmm = new SingleSpMM(); // new StreamSpMM() for Java8 parallel Stream API implementation
+
 // multiply dense x dense matrix (single threaded)
-dense0.multiply(dense0);
+DenseFloatMatrix result = spmm.multiply(m0, m1, DenseFloatMatrix.class);
 
 // multiply CRS x CCS matrix (single threaded) with result as COO matrix
-MutableCOOMatrix coo = crs.multiply(ccs, MutableCOOMatrix.class);
+MutableCOOMatrix coo = spmm.multiply(crs, ccs, MutableCOOMatrix.class);
 
 // create SpMM context with default threaded executor
-SpMM context = SpMM.create();
+SpMM context = ExeceutorSpMM.create(); // localy better to use Stream implementation
 
 // concurrent CRS x CCS matrix with COO matrix as result
 MutableCOOMatrix coo = context.multiply(crs, ccs);
 
 ```
 
-Multiply matrices (OpenCL):
+#### Multiply matrices (OpenCL):
 
 ```java
 // create OpenCL context with best device (GPU)
-CL cl = CL.create();
+SpMM cl = CLSpMM.create();
 
 // dense x dense matrix multiplication on the GPU
-DenseFloatMatrix dense = cl.multiply(dense0, dense1);
+DenseFloatMatrix result = spmm.multiply(m0, m1, DenseFloatMatrix.class);
 
 // CRS x CCS matrix with COO matrix as result on the GPU
-COOMatrix coo = cl.multiply(crs, ccs);
+MutableCOOMatrix coo = context.multiply(crs, ccs);
 
 ```
 
-Multiply matrices on the GridGain cluster:
+#### Multiply matrices on the GridGain cluster:
 
 ```java
 // start or connect to your grid, for example
 GridEntry grid = GridEntry.start();
 
 // create SpMM context with the ExecutorService from the compute grid
-SpMM context = SpMM.create(grid.getGrid().compute().executorService());
-
-// dense x dense matrix multiplication on the GPU
-DenseFloatMatrix dense = cl.multiply(dense0, dense1);
+SpMM context = ExeceutorSpMM.create(grid.getGrid().compute().executorService());
 
 // CRS x CCS matrix with COO matrix as result on the compute grid
-MutableCOOMatrix coo = spmm.multiply(crs, ccs);
+MutableCOOMatrix coo = spmm.multiply(crs, ccs, MutableCOOMatrix);
 
 ```
 

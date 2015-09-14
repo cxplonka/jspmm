@@ -23,6 +23,8 @@
  */
 package com.annotation.trigram;
 
+import com.jspmm.SpMM;
+import com.jspmm.StreamSpMM;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
 import com.jspmm.matrix.MutableCOOMatrix;
@@ -209,7 +211,8 @@ public class AnnotationView extends javax.swing.JFrame {
                 CRSMatrix crs = CRSStreamMatrix.readCRSMatrix(smFile.getAbsolutePath());
                 CCSMatrix ccs = CCSStreamMatrix.readCCSMatrix(tmFile.getAbsolutePath());
                 //
-                MutableCOOMatrix ret = crs.multiply(ccs, MutableCOOMatrix.class);
+                SpMM spmm = new StreamSpMM();
+                MutableCOOMatrix ret = spmm.multiply(crs, ccs, MutableCOOMatrix.class);
                 System.out.println(ret.nrow + " " + ret.ncol);
 
                 //update rank list

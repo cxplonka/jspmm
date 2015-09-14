@@ -42,7 +42,7 @@ public class CRSMatrix extends AbstractMatrix {
     }
 
     /**
-     * Create an CRS from an dense matrix
+     * Create an CRS from an dense matrix/vector
      *
      * @param values
      * @param ncol
@@ -75,61 +75,7 @@ public class CRSMatrix extends AbstractMatrix {
         }
 
         return new CRSMatrix(nrow, ncol, val, colIdx, rowPtr);
-    }
-
-    public float[] multiply(float[] vector) {
-        if (ncol != vector.length) {
-            throw new IllegalArgumentException("Can not multipy matrixes [col != row].");
-        }
-
-        float[] ret = new float[nrow];
-        for (int i = 0; i < ret.length; i++) {
-            for (int j = rowPtr[i]; j < rowPtr[i + 1]; j++) {
-                ret[i] += values[j] * vector[colIdx[j]];
-            }
-        }
-        return ret;
-    }
-
-    public <T extends AbstractMatrix> T multiply(CCSMatrix m, Class<T> resultBuffer) {
-        if (ncol != m.nrow) {
-            throw new IllegalArgumentException("Can not multipy matrixes [col != row].");
-        }
-
-        T ret = null;
-        try {
-            ret = resultBuffer.getConstructor(new Class[]{
-                int.class, int.class}).newInstance(nrow, m.ncol);
-        } catch (Exception ex) {
-            throw new UnsupportedOperationException("Matrix type dont supported.");
-        }
-
-        for (int rowA = 0; rowA < nrow; rowA++) { // each row in A
-            for (int colB = 0; colB < m.ncol; colB++) { // each column in B
-                float value = 0;
-                // each nonzero in A row
-                for (int i = rowPtr[rowA]; i < rowPtr[rowA + 1]; i++) {
-                    // each nonzero in B column
-                    for (int j = m.colPtr[colB]; j < m.colPtr[colB + 1]; j++) {
-                        if (colIdx[i] == m.rowIdx[j]) {
-                            value += values[i] * m.values[j];
-                            break;
-                        }
-                    }
-                }
-                // add nonzero calculated values
-                if (value != 0) {
-                    ret.set(rowA, colB, value);
-                }
-            }
-        }
-
-        return ret;
-    }
-
-    public DenseFloatMatrix multiply(CCSMatrix m) {
-        return multiply(m, DenseFloatMatrix.class);
-    }
+    }    
 
     @Override
     public float get(int i, int j) {

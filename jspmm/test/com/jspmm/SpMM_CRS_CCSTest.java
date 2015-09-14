@@ -1,112 +1,132 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * The MIT License
+ *
+ * Copyright 2015 Christian Plonka.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package com.jspmm;
 
-import com.jspmm.cl.CL;
-import com.jspmm.concurrent.SpMM;
 import com.jspmm.matrix.CCSMatrix;
-import com.jspmm.matrix.COOMatrix;
 import com.jspmm.matrix.CRSMatrix;
-import com.jspmm.matrix.MutableCOOMatrix;
-import org.gridgain.grid.GridException;
-import org.junit.AfterClass;
+import com.jspmm.matrix.DenseFloatMatrix;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  *
- * @author cplonka
+  * @author Christian Plonka (cplonka81@gmail.com)
  */
 public class SpMM_CRS_CCSTest {
 
     static CRSMatrix mat0;
     static CRSMatrix mat1;
     static CRSMatrix mat2;
-    static CL context;
-    static SpMM service;
+    
+    static final SpMM cpu = new SingleSpMM();
+    static final SpMM stream = new StreamSpMM();
 
     @BeforeClass
     public static void setUpClass() {
-        context = CL.create();
-        service = SpMM.create();
         mat0 = CRSMatrix.create(Data.m0, 5);
         mat1 = CRSMatrix.create(Data.m1, 3);
         mat2 = CRSMatrix.create(Data.m2, 5);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws GridException {
-        service.shutdown();
-    }
-
     @Test
     public void testSpMv_CPU_m0() {
-        assertArrayEquals(mat0.multiply(CCSMatrix.create(Data.v0, 1)).values, Data.p0, 0);
+        assertArrayEquals(
+                cpu.multiply(mat0, CCSMatrix.create(Data.v0, 1), DenseFloatMatrix.class).values,
+                Data.p0,
+                0);
     }
 
     @Test
     public void testSpMv_CPU_m1() {
-        assertArrayEquals(mat1.multiply(CCSMatrix.create(Data.v1, 1)).values, Data.p1, 0);
+        assertArrayEquals(
+                cpu.multiply(mat1, CCSMatrix.create(Data.v1, 1), DenseFloatMatrix.class).values,
+                Data.p1,
+                0);
     }
 
     @Test
     public void testSpMv_CPU_m2() {
-        assertArrayEquals(mat2.multiply(CCSMatrix.create(Data.v2, 1)).values, Data.p2, 0);
+        assertArrayEquals(
+                cpu.multiply(mat2, CCSMatrix.create(Data.v2, 1), DenseFloatMatrix.class).values,
+                Data.p2,
+                0);
     }
 
     @Test
     public void testSpMM_CPU_m0() {
-        assertArrayEquals(mat0.multiply(CCSMatrix.create(Data.m1, 3)).values, Data.p_m0_m1, 0);
+        assertArrayEquals(
+                cpu.multiply(mat0, CCSMatrix.create(Data.m1, 3), DenseFloatMatrix.class).values,
+                Data.p_m0_m1,
+                0);
     }
 
     @Test
     public void testSpMM_CPU_m1() {
-        assertArrayEquals(mat1.multiply(CCSMatrix.create(Data.m2, 5)).values, Data.p_m1_m2, 0);
+        assertArrayEquals(
+                cpu.multiply(mat1, CCSMatrix.create(Data.m2, 5), DenseFloatMatrix.class).values,
+                Data.p_m1_m2,
+                0);
     }
 
     @Test
-    public void testSpMM_OCL_m0() {
-        COOMatrix m = context.multiply(mat0, CCSMatrix.create(Data.m1, 3));
-        for (int i = 0; i < m.values.length; i++) {
-            int r = m.rowIdx[i];
-            int c = m.colIdx[i];
-            int idx = r * m.ncol + c;
-            assertEquals(m.values[i], Data.p_m0_m1[idx], 0);
-        }
+    public void testSpMv_STREAM_m0() {
+        assertArrayEquals(
+                stream.multiply(mat0, CCSMatrix.create(Data.v0, 1), DenseFloatMatrix.class).values,
+                Data.p0,
+                0);
     }
 
     @Test
-    public void testSpMM_OCL_m1() {
-        COOMatrix m = context.multiply(mat1, CCSMatrix.create(Data.m2, 5));
-        for (int i = 0; i < m.values.length; i++) {
-            int r = m.rowIdx[i];
-            int c = m.colIdx[i];
-            int idx = r * m.ncol + c;
-            assertEquals(m.values[i], Data.p_m1_m2[idx], 0);
-        }
+    public void testSpMv_STREAM_m1() {
+        assertArrayEquals(
+                stream.multiply(mat1, CCSMatrix.create(Data.v1, 1), DenseFloatMatrix.class).values,
+                Data.p1,
+                0);
     }
 
     @Test
-    public void testSpMM_Parallel_m0() throws Exception {
-        MutableCOOMatrix m = service.multiply(mat0, CCSMatrix.create(Data.m1, 3));
-        for (int i = 0; i < Data.p_m0_m1.length; i++) {
-            int r = i / m.ncol;
-            int c = i % m.ncol;
-            assertEquals(m.get(r, c), Data.p_m0_m1[i], 0);
-        }
+    public void testSpMv_STREAM_m2() {
+        assertArrayEquals(
+                stream.multiply(mat2, CCSMatrix.create(Data.v2, 1), DenseFloatMatrix.class).values,
+                Data.p2,
+                0);
     }
 
     @Test
-    public void testSpMM_Parallel_m1() throws Exception {
-        MutableCOOMatrix m = service.multiply(mat1, CCSMatrix.create(Data.m2, 5));
-        for (int i = 0; i < Data.p_m1_m2.length; i++) {
-            int r = i / m.ncol;
-            int c = i % m.ncol;
-            assertEquals(m.get(r, c), Data.p_m1_m2[i], 0);
-        }
+    public void testSpMM_STREAM_m0() {
+        assertArrayEquals(
+                stream.multiply(mat0, CCSMatrix.create(Data.m1, 3), DenseFloatMatrix.class).values,
+                Data.p_m0_m1,
+                0);
+    }
+
+    @Test
+    public void testSpMM_STREAM_m1() {
+        assertArrayEquals(
+                stream.multiply(mat1, CCSMatrix.create(Data.m2, 5), DenseFloatMatrix.class).values,
+                Data.p_m1_m2,
+                0);
     }
 }

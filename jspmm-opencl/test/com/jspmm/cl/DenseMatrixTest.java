@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jspmm;
+package com.jspmm.cl;
 
+import com.jspmm.SingleSpMM;
+import com.jspmm.SpMM;
 import com.jspmm.matrix.DenseFloatMatrix;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,8 +39,8 @@ public class DenseMatrixTest {
     static DenseFloatMatrix mat0;
     static DenseFloatMatrix mat1;
     static DenseFloatMatrix mat2;
-    static final SpMM cpu = new SingleSpMM();
-    static final SpMM stream = new StreamSpMM();
+
+    static final SpMM spmm = new SingleSpMM();
 
     @BeforeClass
     public static void setUpClass() {
@@ -49,78 +50,41 @@ public class DenseMatrixTest {
     }
 
     @Test
-    public void testCreate_m0() {
-        assertEquals(mat0.nrow, 5);
-        assertEquals(mat0.ncol, 5);
-        assertArrayEquals(mat0.values, Data.m0, 0);
-    }
-
-    @Test
-    public void testCreate_m1() {
-        assertEquals(mat1.nrow, 5);
-        assertEquals(mat1.ncol, 3);
-        assertArrayEquals(mat1.values, Data.m1, 0);
-    }
-
-    @Test
-    public void testCreate_m2() {
-        assertEquals(mat2.nrow, 3);
-        assertEquals(mat2.ncol, 5);
-        assertArrayEquals(mat2.values, Data.m2, 0);
-    }
-
-    @Test
-    public void testSpMv_CPU_m0() {
+    public void testSpMv_OCL_m0() {
         assertArrayEquals(
-                cpu.multiply(mat0, DenseFloatMatrix.create(Data.v0, 1), DenseFloatMatrix.class).values,
+                spmm.multiply(mat0, DenseFloatMatrix.create(Data.v0, 1), DenseFloatMatrix.class).values,
                 Data.p0,
                 0);
     }
 
     @Test
-    public void testSpMv_CPU_m1() {
+    public void testSpMv_OCL_m1() {
         assertArrayEquals(
-                cpu.multiply(mat1, DenseFloatMatrix.create(Data.v1, 1), DenseFloatMatrix.class).values,
+                spmm.multiply(mat1, DenseFloatMatrix.create(Data.v1, 1), DenseFloatMatrix.class).values,
                 Data.p1,
                 0);
     }
 
     @Test
-    public void testSpMv_CPU_m2() {
+    public void testSpMv_OCL_m2() {
         assertArrayEquals(
-                cpu.multiply(mat2, DenseFloatMatrix.create(Data.v2, 1), DenseFloatMatrix.class).values,
+                spmm.multiply(mat2, DenseFloatMatrix.create(Data.v2, 1), DenseFloatMatrix.class).values,
                 Data.p2,
                 0);
     }
 
     @Test
-    public void testSpMM_CPU_m0() {
+    public void testSpMM_OCL_m0() {
         assertArrayEquals(
-                cpu.multiply(mat0, mat1, DenseFloatMatrix.class).values,
+                spmm.multiply(mat0, mat1, DenseFloatMatrix.class).values,
                 Data.p_m0_m1,
                 0);
     }
 
     @Test
-    public void testSpMM_CPU_m1() {
+    public void testSpMM_OCL_m1() {
         assertArrayEquals(
-                cpu.multiply(mat1, mat2, DenseFloatMatrix.class).values,
-                Data.p_m1_m2,
-                0);
-    }
-
-    @Test
-    public void testSpMM_CPU_stream_m0() {
-        assertArrayEquals(
-                stream.multiply(mat0, mat1, DenseFloatMatrix.class).values,
-                Data.p_m0_m1,
-                0);
-    }
-
-    @Test
-    public void testSpMM_CPU_stream_m1() {
-        assertArrayEquals(
-                stream.multiply(mat1, mat2, DenseFloatMatrix.class).values,
+                spmm.multiply(mat1, mat2, DenseFloatMatrix.class).values,
                 Data.p_m1_m2,
                 0);
     }

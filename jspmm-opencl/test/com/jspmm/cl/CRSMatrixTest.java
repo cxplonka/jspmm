@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jspmm;
+package com.jspmm.cl;
 
+import com.jspmm.SingleSpMM;
+import com.jspmm.SpMM;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
 import com.jspmm.matrix.DenseFloatMatrix;
@@ -50,7 +52,7 @@ public class CRSMatrixTest {
     static final float[] m2_values = new float[]{3, 1, 2, 4, 2};
     static final int[] m2_colIdx = new int[]{2, 3, 0, 3, 2};
     static final int[] m2_rowPtr = new int[]{0, 2, 4, 5};
-    
+
     static final SpMM spmm = new SingleSpMM();
 
     @BeforeClass
@@ -61,34 +63,7 @@ public class CRSMatrixTest {
     }
 
     @Test
-    public void testCreate_m0() {
-        assertEquals(mat0.nrow, 5);
-        assertEquals(mat0.ncol, 5);
-        assertArrayEquals(mat0.colIdx, m0_colIdx);
-        assertArrayEquals(mat0.rowPtr, m0_rowPtr);
-        assertArrayEquals(mat0.values, m0_values, 0);
-    }
-
-    @Test
-    public void testCreate_m1() {
-        assertEquals(mat1.nrow, 5);
-        assertEquals(mat1.ncol, 3);
-        assertArrayEquals(mat1.colIdx, m1_colIdx);
-        assertArrayEquals(mat1.rowPtr, m1_rowPtr);
-        assertArrayEquals(mat1.values, m1_values, 0);
-    }
-
-    @Test
-    public void testCreate_m2() {
-        assertEquals(mat2.nrow, 3);
-        assertEquals(mat2.ncol, 5);
-        assertArrayEquals(mat2.colIdx, m2_colIdx);
-        assertArrayEquals(mat2.rowPtr, m2_rowPtr);
-        assertArrayEquals(mat2.values, m2_values, 0);
-    }
-
-    @Test
-    public void testSpMv_CPU_m0() {
+    public void testSpMv_OCL_m0() {
         assertArrayEquals(
                 spmm.multiply(mat0, CCSMatrix.create(Data.v0, 1), DenseFloatMatrix.class).values,
                 Data.p0,
@@ -96,7 +71,7 @@ public class CRSMatrixTest {
     }
 
     @Test
-    public void testSpMv_CPU_m1() {
+    public void testSpMv_OCL_m1() {
         assertArrayEquals(
                 spmm.multiply(mat1, CCSMatrix.create(Data.v1, 1), DenseFloatMatrix.class).values,
                 Data.p1,
@@ -104,7 +79,7 @@ public class CRSMatrixTest {
     }
 
     @Test
-    public void testSpMv_CPU_m2() {
+    public void testSpMv_OCL_m2() {
         assertArrayEquals(
                 spmm.multiply(mat2, CCSMatrix.create(Data.v2, 1), DenseFloatMatrix.class).values,
                 Data.p2,

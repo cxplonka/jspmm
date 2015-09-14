@@ -48,7 +48,7 @@ final class CCS_SPMV_Kernel {
         InputStream stream = null;
         try {
             //read kernel source
-            source = Util.readContent(stream = CL.class.getResourceAsStream(
+            source = Util.readContent(stream = CLSpMM.class.getResourceAsStream(
                     "/com/jspmm/cl/ccs_spmv.cl"));
         } catch (IOException ex) {
             ex.printStackTrace();

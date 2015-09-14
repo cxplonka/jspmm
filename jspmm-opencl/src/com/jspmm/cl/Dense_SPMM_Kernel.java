@@ -48,7 +48,7 @@ final class Dense_SPMM_Kernel {
         InputStream stream = null;
         try {
             //read kernel source
-            source = Util.readContent(stream = CL.class.getResourceAsStream(
+            source = Util.readContent(stream = CLSpMM.class.getResourceAsStream(
                     "/com/jspmm//cl/dense_spmm.cl"));
         } catch (IOException ex) {
             ex.printStackTrace();
