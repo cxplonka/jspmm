@@ -51,8 +51,8 @@ CCSMatrix ccs = CCSMatrix.create(m0, 5);
 #### Multiply matrices (CPU):
 
 ```java
-// create context
-SpMM spmm = new SingleSpMM(); // new StreamSpMM() for Java8 parallel Stream API implementation
+// create context, new StreamSpMM() for Java8 parallel Stream API implementation
+SpMM spmm = new SingleSpMM();
 
 // multiply dense x dense matrix (single threaded)
 DenseFloatMatrix result = spmm.multiply(m0, m1, DenseFloatMatrix.class);
