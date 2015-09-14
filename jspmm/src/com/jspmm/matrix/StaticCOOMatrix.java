@@ -28,7 +28,7 @@ package com.jspmm.matrix;
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class StaticCOOMatrix extends AbstractMatrix {
+public class StaticCOOMatrix extends Matrix {
 
     public final float[] values;
     public final int[] rowIdx;

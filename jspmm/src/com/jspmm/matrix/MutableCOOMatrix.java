@@ -29,7 +29,7 @@ import it.unimi.dsi.fastutil.longs.Long2FloatOpenHashMap;
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class MutableCOOMatrix extends AbstractMatrix {
+public class MutableCOOMatrix extends Matrix {
 
     private final Long2FloatOpenHashMap _backBuffer = new Long2FloatOpenHashMap();
 
@@ -40,7 +40,7 @@ public class MutableCOOMatrix extends AbstractMatrix {
     public static MutableCOOMatrix create(float[] values, int ncol) {
         int nrow = values.length / ncol;
         MutableCOOMatrix ret = new MutableCOOMatrix(nrow, ncol);
-        //scan column major
+        // scan column major
         for (int i = 0; i < nrow; i++) {
             for (int j = 0; j < ncol; j++) {
                 float value = values[i * ncol + j];
@@ -59,19 +59,23 @@ public class MutableCOOMatrix extends AbstractMatrix {
 
     @Override
     public void set(int i, int j, float value) {
-        // nrow = Math.max(i, nrow);
-        // ncol = Math.max(j, ncol);
+        // keep update dimensions
+        nrow = Math.max(i, nrow);
+        ncol = Math.max(j, ncol);
         _backBuffer.put(pack(i, j), value);
     }
 
-    public int getNnz(){
+    public int getNnz() {
         return _backBuffer.size();
     }
-    
-    public void merge(MutableCOOMatrix m){
+
+    public void merge(MutableCOOMatrix m) {
+        // keep update dimensions
+        nrow = Math.max(m.nrow, nrow);
+        ncol = Math.max(m.ncol, ncol);
         _backBuffer.putAll(m._backBuffer);
     }
-    
+
     static long pack(int x, int y) {
         long xPacked = ((long) x) << 32;
         long yPacked = y & 0xFFFFFFFFL;

@@ -27,12 +27,12 @@ package com.jspmm.matrix;
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public abstract class AbstractMatrix {
+public abstract class Matrix {
 
-    public final int nrow;
-    public final int ncol;
+    public int nrow;
+    public int ncol;
 
-    public AbstractMatrix(int nrow, int ncol) {
+    public Matrix(int nrow, int ncol) {
         this.nrow = nrow;
         this.ncol = ncol;
     }

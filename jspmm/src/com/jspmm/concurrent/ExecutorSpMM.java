@@ -24,7 +24,7 @@
 package com.jspmm.concurrent;
 
 import com.jspmm.SpMM;
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
 import com.jspmm.matrix.MutableCOOMatrix;
@@ -75,7 +75,7 @@ public final class ExecutorSpMM implements SpMM {
     }
 
     @Override
-    public <T extends AbstractMatrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result) {
+    public <T extends Matrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result) {
         if (!result.isAssignableFrom(MutableCOOMatrix.class)) {
             throw new UnsupportedOperationException("Not supported yet, only MutableCOOMatrix.");
         }
@@ -96,7 +96,7 @@ public final class ExecutorSpMM implements SpMM {
     }
 
     @Override
-    public <T extends AbstractMatrix> T multiply(AbstractMatrix m0, AbstractMatrix m1, Class<T> result) {
+    public <T extends Matrix> T multiply(Matrix m0, Matrix m1, Class<T> result) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -24,7 +24,7 @@
 package com.jspmm.cl;
 
 import com.jspmm.SpMM;
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import com.jspmm.matrix.DenseFloatMatrix;
 import com.nativelibs4java.opencl.CLContext;
 import com.nativelibs4java.opencl.JavaCL;
@@ -122,7 +122,7 @@ public final class CLSpMM implements SpMM {
     }
 
     @Override
-    public <T extends AbstractMatrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result) {
+    public <T extends Matrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result) {
         if (!result.isAssignableFrom(StaticCOOMatrix.class)) {
             throw new UnsupportedOperationException("Not supported yet, only StaticCOOMatrix.");
         }
@@ -135,7 +135,7 @@ public final class CLSpMM implements SpMM {
     }
 
     @Override
-    public <T extends AbstractMatrix> T multiply(AbstractMatrix m0, AbstractMatrix m1, Class<T> result) {
+    public <T extends Matrix> T multiply(Matrix m0, Matrix m1, Class<T> result) {
         if (!m0.getClass().isAssignableFrom(DenseFloatMatrix.class)
                 || !m1.getClass().isAssignableFrom(DenseFloatMatrix.class)
                 || !result.isAssignableFrom(DenseFloatMatrix.class)) {

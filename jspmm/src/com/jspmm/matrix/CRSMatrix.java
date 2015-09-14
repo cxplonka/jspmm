@@ -28,7 +28,7 @@ package com.jspmm.matrix;
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class CRSMatrix extends AbstractMatrix {
+public class CRSMatrix extends Matrix {
 
     public final float[] values;
     public final int[] colIdx;

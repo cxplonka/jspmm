@@ -23,7 +23,7 @@
  */
 package com.jspmm.util;
 
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
@@ -77,7 +77,7 @@ public class Util {
         }
     }
 
-    public static void random(AbstractMatrix m, double density, int max) {
+    public static void random(Matrix m, double density, int max) {
         Random rnd = new Random();
         if (density == 0) {
             return;
@@ -91,7 +91,7 @@ public class Util {
         }
     }
 
-    public static void print(AbstractMatrix m) {
+    public static void print(Matrix m) {
         for (int i = 0; i < m.nrow; i++) {
             for (int j = 0; j < m.ncol; j++) {
                 System.out.print(m.get(i, j) + " ");
@@ -100,7 +100,7 @@ public class Util {
         }
     }
 
-    public static int numberNonZero(AbstractMatrix m) {
+    public static int numberNonZero(Matrix m) {
         int ret = 0;
         for (int i = 0; i < m.nrow; i++) {
             for (int j = 0; j < m.ncol; j++) {

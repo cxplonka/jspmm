@@ -27,7 +27,7 @@ package com.jspmm.matrix;
  *
  * @author Christian Plonka (cplonka81@gmail.com)
  */
-public class DenseFloatMatrix extends AbstractMatrix {
+public class DenseFloatMatrix extends Matrix {
 
     public final float[] values;
 

@@ -23,7 +23,7 @@
  */
 package com.jspmm.concurrent;
 
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -35,7 +35,7 @@ import java.util.concurrent.Future;
  * @param <T1>
  * @param <R>
  */
-public interface MapReduce<T0 extends AbstractMatrix, T1 extends AbstractMatrix, R extends AbstractMatrix> {
+public interface MapReduce<T0 extends Matrix, T1 extends Matrix, R extends Matrix> {
 
     public List<Callable<R>> map(T0 a, T1 b, int nodes);
 

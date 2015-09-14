@@ -23,7 +23,7 @@
  */
 package com.jspmm;
 
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
 
@@ -53,7 +53,7 @@ import com.jspmm.matrix.CRSMatrix;
  */
 public interface SpMM {
 
-    public <T extends AbstractMatrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result);
+    public <T extends Matrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result);
 
-    public <T extends AbstractMatrix> T multiply(AbstractMatrix m0, AbstractMatrix m1, Class<T> result);
+    public <T extends Matrix> T multiply(Matrix m0, Matrix m1, Class<T> result);
 }

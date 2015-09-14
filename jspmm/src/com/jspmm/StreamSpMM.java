@@ -23,7 +23,7 @@
  */
 package com.jspmm;
 
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
 import java.util.stream.IntStream;
@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 public class StreamSpMM implements SpMM {
 
     @Override
-    public <T extends AbstractMatrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result) {
+    public <T extends Matrix> T multiply(CRSMatrix m0, CCSMatrix m1, Class<T> result) {
         if (m0.ncol != m1.nrow) {
             throw new IllegalArgumentException("Can not multipy matrixes [col != row].");
         }
@@ -72,7 +72,7 @@ public class StreamSpMM implements SpMM {
     }
 
     @Override
-    public <T extends AbstractMatrix> T multiply(AbstractMatrix m0, AbstractMatrix m1, Class<T> result) {
+    public <T extends Matrix> T multiply(Matrix m0, Matrix m1, Class<T> result) {
         if (m0.ncol != m1.nrow) {
             throw new IllegalArgumentException("Can not multipy matrixes [col != row].");
         }
@@ -94,5 +94,20 @@ public class StreamSpMM implements SpMM {
         } catch (Exception ex) {
             throw new UnsupportedOperationException("Matrix type dont supported.", ex);
         }
+    }
+
+    public float[] multiply(CRSMatrix m0, float[] vector) {
+        if (m0.ncol != vector.length) {
+            throw new IllegalArgumentException("Can not multipy matrixes [col != row].");
+        }
+
+        float[] ret = new float[m0.nrow];
+        IntStream.range(0, ret.length).parallel().forEach(id -> {
+            for (int j = m0.rowPtr[id]; j < m0.rowPtr[id + 1]; j++) {
+                ret[id] += m0.values[j] * vector[m0.colIdx[j]];
+            }
+        });
+
+        return ret;
     }
 }

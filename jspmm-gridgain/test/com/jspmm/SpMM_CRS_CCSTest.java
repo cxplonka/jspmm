@@ -25,7 +25,7 @@ package com.jspmm;
 
 import com.jspmm.concurrent.ExecutorSpMM;
 import com.jspmm.gridgain.GridEntry;
-import com.jspmm.matrix.AbstractMatrix;
+import com.jspmm.matrix.Matrix;
 import com.jspmm.matrix.CCSMatrix;
 import com.jspmm.matrix.CRSMatrix;
 import com.jspmm.matrix.MutableCOOMatrix;
@@ -63,7 +63,7 @@ public class SpMM_CRS_CCSTest {
 
     @Test
     public void testSpMM_Parallel_m0() throws Exception {
-        AbstractMatrix m = spmm.multiply(mat0, CCSMatrix.create(Data.m1, 3), MutableCOOMatrix.class);
+        Matrix m = spmm.multiply(mat0, CCSMatrix.create(Data.m1, 3), MutableCOOMatrix.class);
         for (int i = 0; i < Data.p_m0_m1.length; i++) {
             int r = i / m.ncol;
             int c = i % m.ncol;
@@ -73,7 +73,7 @@ public class SpMM_CRS_CCSTest {
 
     @Test
     public void testSpMM_Parallel_m1() throws Exception {
-        AbstractMatrix m = spmm.multiply(mat1, CCSMatrix.create(Data.m2, 5), MutableCOOMatrix.class);
+        Matrix m = spmm.multiply(mat1, CCSMatrix.create(Data.m2, 5), MutableCOOMatrix.class);
         for (int i = 0; i < Data.p_m1_m2.length; i++) {
             int r = i / m.ncol;
             int c = i % m.ncol;
