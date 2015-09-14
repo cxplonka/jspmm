@@ -1,4 +1,4 @@
-# jspmm
+# JSpMM - [![Build Status](https://travis-ci.org/cxplonka/jspmm.svg?branch=master)](https://travis-ci.org/cxplonka/jspmm)
 
 JSpMM provides matrix-matrix and matrix-vector multiplication for different matrix types and different backends 
 for Java8 Streams, Multicore CPU, OpenCL and GridComputing based on GridGain in single precision floating point arithmetic.
