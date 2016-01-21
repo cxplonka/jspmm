@@ -44,7 +44,7 @@ class SentenceMatrix {
 
     public void generate(String input, String output) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(input))) {
-            //stream out as ccs format
+            //stream out as crs format
             try (CRSStreamMatrix out = new CRSStreamMatrix(output)) {
                 //start with 0
                 out.writeRowPtr(0);
