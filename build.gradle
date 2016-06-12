@@ -48,7 +48,11 @@ subprojects {
             html.destination "${buildDir}/reports/coverage"
         }
     }
+
+    check.dependsOn jacocoTestReport
 }
+
+
 
 buildscript {
     repositories {
@@ -59,5 +63,3 @@ buildscript {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
-
-check.dependsOn jacocoTestReport
