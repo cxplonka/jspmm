@@ -1,27 +1,4 @@
 // jspmm-annotation example gradle build file
-apply plugin: 'java'
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-        test {
-            java {
-                srcDir 'test'
-            }
-        }
-        resources {
-            srcDir 'resources'
-        }
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile project(':jspmm')
-    testCompile group: 'junit', name: 'junit', version: '4.+'
 }

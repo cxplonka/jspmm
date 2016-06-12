@@ -1,28 +1,5 @@
 // jspmm-opencl gradle build file
-apply plugin: 'java'
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-        test {
-            java {
-                srcDir 'test'
-            }
-        }
-        resources {
-            srcDir 'resources'
-        }
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile project(':jspmm')
     compile 'com.nativelibs4java:javacl:1.0.0-RC4'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
 }
