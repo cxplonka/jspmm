@@ -1,8 +1,18 @@
 // jspmm-all gradle build file
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+    }
+}
+
 allprojects {    
     apply plugin: 'java' 
     apply plugin: 'jacoco'
-    apply plugin: 'com.github.kt3k.coveralls'    
+    apply plugin: 'com.github.kt3k.coveralls'
     
     group = 'com.jspmm'
     version = '0.0.1'    
@@ -47,19 +57,5 @@ subprojects {
             html.enabled = true
             html.destination "${buildDir}/reports/coverage"
         }
-    }
-
-    check.dependsOn jacocoTestReport
-}
-
-
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
